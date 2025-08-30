@@ -22,6 +22,7 @@
     <label for="guessField">予想: </label>
     <input type="number" min="1" max="100" id="guessField">
     <input type="submit" value="予想を入力" id="guessSubmit">
+    <input type="button" value="リセット" id="guessReset" style="background-color: red; color: white;">
     <p id="guessResult"></p>
     <div id="zanki"></div>
   </div>
@@ -46,6 +47,9 @@
 
   // 結果を表示する要素を取得
   let guessResult = document.querySelector('#guessResult');
+
+  // resetボタンを取得
+  let guessReset = document.querySelector('#guessReset');
 
   // ユーザーの入力をチェックし、結果を表示
   function checkGuess() {
@@ -72,6 +76,17 @@
 
   // submitがクリックされたときに、checkGuess関数を呼び出す
   guessSubmit.addEventListener('click', checkGuess);
+
+  // resetがクリックされたときに、ゲームをリセットする
+  guessReset.addEventListener('click', function() {
+    window.prompt('ほ、本当に諦めるの？');
+
+    zanki = 10; // 残り回数をリセット
+    zankiField.textContent = '残り回数: ' + zanki; // 残り回数を更新
+    guessField.value = ''; // 入力フィールドをクリア
+    guessResult.textContent = ''; // 結果表示をクリア
+    answerNumber = Math.floor(Math.random() * 100) + 1; // 新しい正解を生成
+  });
 </script>
 
 </body>
