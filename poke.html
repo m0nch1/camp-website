@@ -6,10 +6,13 @@
   <style>
     #pokemon {
       width: 300px;
+      text-align: center; /* 画像と名前を中央揃えにする */
     }
 
     #pokemonImage {
       width: 100%;
+      max-width: 300px; /* 画像の最大幅を設定 */
+      height: auto;
     }
   </style>
 </head>
@@ -17,36 +20,26 @@
 
 <main class="container">
   <h1>今日のポケモン</h1>
-  
+
   <div id="pokemon">
     <h2 id="pokemonName"></h2>
-    <img id="pokemonImage" src="">
+    <img id="pokemonImage" src="" alt="ポケモンの画像">
   </div>
 </main>
 
 <script>
-  // ポケモンの名前を表示する要素を取得
   let pokemonName = document.getElementById('pokemonName');
-
-  // ポケモンの画像を表示する要素を取得
   let pokemonImage = document.getElementById('pokemonImage');
 
-  // ポケモンは現在898種
   let pokemonNumber = Math.floor(Math.random() * 898) + 1;
 
+  let imageUrls = []; // 画像URLを格納する配列
+  let currentIndex = 0; // 現在表示している画像のインデックス
+
+  // ポケモンの名前を取得
   fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`)
-    .then(function (response) {
-      // レスポンスをコンソールに出力
-      console.log(response);
-
-      // JSONデータを取得して次の .then() に渡す
-      return response.json();
-    })
-    .then(function(data) {
-      // JSONデータをコンソールに出力
-      console.log(data);
-
-      // 日本語の名前を取得して表示
+    .then(response => response.json())
+    .then(data => {
       let names = data.names;
       for (let i = 0; i < names.length; i++) {
         if (names[i].language.name === 'ja') {
@@ -55,31 +48,37 @@
         }
       }
     })
-    .catch(function(error) {
-      // エラーが発生した場合はコンソールに出力
-      console.error(`エラーが発生しました:${error}`);
-    });
- 
-  // PokéAPIからデータを取得し、名前と画像を表示
+    .catch(error => console.error(`名前の取得中にエラーが発生しました:${error}`));
+
+  // ポケモンの画像を取得し、回転表示を開始
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`)
-    .then(function (response) {
-      // レスポンスをコンソールに出力
-      console.log(response);
+    .then(response => response.json())
+    .then(data => {
+      // 表示したい画像をimageUrls配列に追加
+      // 必要に応じて他のビューも追加してください
+      if (data.sprites.front_default) imageUrls.push(data.sprites.front_default);
+      if (data.sprites.back_default) imageUrls.push(data.sprites.back_default);
+      if (data.sprites.front_shiny) imageUrls.push(data.sprites.front_shiny);
+      if (data.sprites.back_shiny) imageUrls.push(data.sprites.back_shiny);
+      // 公式アートワークも追加したい場合はここに入れる
+      if (data.sprites.other && data.sprites.other['official-artwork'] && data.sprites.other['official-artwork'].front_default) {
+        imageUrls.push(data.sprites.other['official-artwork'].front_default);
+      }
 
-      // JSONデータを取得して次の .then() に渡す
-      return response.json();
-    })
-    .then(function(data) {
-      // JSONデータをコンソールに出力
-      console.log(data);
 
-      // ポケモンの画像を表示
-      pokemonImage.src = data.sprites.front_default;
+      if (imageUrls.length > 0) {
+        pokemonImage.src = imageUrls[currentIndex]; // 最初の画像を表示
+
+        // 2秒ごとに画像を切り替える
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % imageUrls.length; // インデックスを更新
+          pokemonImage.src = imageUrls[currentIndex]; // 新しい画像を表示
+        }, 2000); // 2000ミリ秒 = 2秒
+      } else {
+        pokemonImage.alt = "画像がありません。";
+      }
     })
-    .catch(function(error) {
-      // エラーが発生した場合はコンソールに出力
-      console.error(`エラーが発生しました:${error}`);
-    });
+    .catch(error => console.error(`画像の取得中にエラーが発生しました:${error}`));
 </script>
 
 </body>
