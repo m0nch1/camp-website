@@ -26,6 +26,8 @@
     <p id="guessResult"></p>
     <div id="zanki"></div>
   </div>
+
+  <audio id="audio"></audio>
 </main>
 
 <script>
@@ -51,10 +53,19 @@
   // resetボタンを取得
   let guessReset = document.querySelector('#guessReset');
 
+  let audio = document.querySelector('#audio'); // audio要素を取得
+  audio.src = 'boss.mp3'; // ファイルパスを設定
+
   // ユーザーの入力をチェックし、結果を表示
   function checkGuess() {
     // ユーザの入力した値を取得
     let userGuess = Number(guessField.value);
+
+    // 一時停止中かどうかで処理を分岐
+    if (audio.paused) {
+    // 一時停止中の場合は再生
+      audio.play();
+    }
 
     zanki--; // 残り回数を1減らす
     zankiField.textContent = '残り回数: ' + zanki; // 残り回数を更新
@@ -86,6 +97,8 @@
     guessField.value = ''; // 入力フィールドをクリア
     guessResult.textContent = ''; // 結果表示をクリア
     answerNumber = Math.floor(Math.random() * 100) + 1; // 新しい正解を生成
+    audio.pause(); //audioを止める
+    audio.currentTime = 0; //時間を０に
   });
 </script>
 
