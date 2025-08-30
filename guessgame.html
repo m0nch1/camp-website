@@ -23,6 +23,7 @@
     <input type="number" min="1" max="100" id="guessField">
     <input type="submit" value="予想を入力" id="guessSubmit">
     <p id="guessResult"></p>
+    <div id="zanki"></div>
   </div>
 </main>
 
@@ -30,6 +31,12 @@
   // 1から100までのランダムな整数を生成し、コンソールにログを出力
   let answerNumber = Math.floor(Math.random() * 100) + 1;
   console.log('正解は' + answerNumber);
+
+  let zanki = 10; // 残りの試行回数
+
+  // 残り回数を表示するフィールドを取得
+  let zankiField = document.querySelector('#zanki');
+  zankiField.textContent = '残り回数: ' + zanki;
 
   // 数値入力フィールドを取得
   let guessField = document.querySelector('#guessField');
@@ -44,6 +51,15 @@
   function checkGuess() {
     // ユーザの入力した値を取得
     let userGuess = Number(guessField.value);
+
+    zanki--; // 残り回数を1減らす
+    zankiField.textContent = '残り回数: ' + zanki; // 残り回数を更新
+
+    if (zanki === 0) { // 残り回数が0になった場合
+      guessResult.textContent = '残念！正解は ' + answerNumber + ' でした。';
+      guessSubmit.disabled = true; // 回答のボタンを無効化
+      return; // 関数を終了
+    }
 
     if (userGuess === answerNumber) { // ユーザの入力が正解
       guessResult.textContent = '正解です！';
