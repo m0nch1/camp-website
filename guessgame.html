@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>数当てゲーム</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" >
+  <style>
+    #guessGame {
+      margin: 20px;
+    }
+
+    #guessGame input {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+
+<main class="container">
+  <h1>数当てゲーム (1~20)</h1>
+  
+  <div id="guessGame">
+    <label for="guessField">予想: </label>
+    <input type="number" min="1" max="20" id="guessField">
+    <input type="submit" value="予想を入力" id="guessSubmit">
+    <p id="guessResult"></p>
+  </div>
+</main>
+
+<script>
+  // 1から20までのランダムな整数を生成し、コンソールにログを出力
+  let answerNumber = Math.floor(Math.random() * 20) + 1;
+  console.log('正解は' + answerNumber);
+
+  // 数値入力フィールドを取得
+  let guessField = document.querySelector('#guessField');
+
+  // submitボタンを取得
+  let guessSubmit = document.querySelector('#guessSubmit');
+
+  // 結果を表示する要素を取得
+  let guessResult = document.querySelector('#guessResult');
+
+  // ユーザーの入力をチェックし、結果を表示
+  function checkGuess() {
+    // ユーザの入力した値を取得
+    let userGuess = Number(guessField.value);
+
+    if (userGuess === answerNumber) { // ユーザの入力が正解
+      guessResult.textContent = '正解です！';
+    } else if (userGuess < answerNumber) { // ユーザの入力が正解より小さい
+      guessResult.textContent = 'もっと大きいです';
+    } else if (userGuess > answerNumber) { // ユーザの入力が正解より大きい
+      guessResult.textContent = 'もっと小さいです';
+    }
+  }
+
+  // submitがクリックされたときに、checkGuess関数を呼び出す
+  guessSubmit.addEventListener('click', checkGuess);
+</script>
+
+</body>
+</html>
