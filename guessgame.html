@@ -1,28 +1,142 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>数当てゲーム</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" >
+  <title>数当てゲーム - SHIBUYA NIGHT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    #guessGame {
-      margin: 20px;
+    body {
+      background: linear-gradient(to bottom, #1a0f2b, #0a0a0a); /* 深い紫から黒へのグラデーション */
+      color: #00ffcc; /* ネオングリーン */
+      font-family: 'Orbitron', sans-serif; /* 未来的なフォント */
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc; /* ネオン効果 */
     }
 
-    #guessGame input {
-      width: 200px;
+    .container {
+      background-color: rgba(10, 0, 30, 0.7); /* 半透明の暗い紫 */
+      border: 2px solid #ff00ff; /* ネオンピンクのボーダー */
+      box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 50px #ff00ff; /* ネオンピンクの光 */
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      backdrop-filter: blur(5px); /* 背景を少しぼかす */
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive; /* ドット絵風フォント */
+      color: #00ffff; /* ネオンシアン */
+      text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
+
+    label {
+      font-size: 1.2em;
+      color: #ffff00; /* ネオンイエロー */
+      text-shadow: 0 0 5px #ffff00;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    #guessField {
+      width: 100%;
+      max-width: 250px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 2px solid #00ffcc;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #00ffcc;
+      font-size: 1.5em;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #00ffcc;
+      outline: none; /* フォーカス時のデフォルトのアウトラインを削除 */
+    }
+    #guessField:focus {
+      border-color: #ff00ff;
+      box-shadow: 0 0 12px #ff00ff;
+    }
+
+    #guessSubmit, #guessReset {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase; /* 大文字にする */
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 0 10px;
+    }
+
+    #guessSubmit {
+      background-color: #00ccff; /* ネオンブルー */
+      color: #0a0a0a;
+      border: 2px solid #00ccff;
+      box-shadow: 0 0 10px #00ccff;
+    }
+    #guessSubmit:hover {
+      background-color: #00ffff;
+      box-shadow: 0 0 20px #00ffff;
+      transform: translateY(-2px);
+    }
+    #guessSubmit:disabled {
+      background-color: #555;
+      border-color: #555;
+      color: #bbb;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #guessReset {
+      background-color: #ff0066; /* ネオンレッド */
+      color: white;
+      border: 2px solid #ff0066;
+      box-shadow: 0 0 10px #ff0066;
+    }
+    #guessReset:hover {
+      background-color: #ff3399;
+      box-shadow: 0 0 20px #ff3399;
+      transform: translateY(-2px);
+    }
+
+    #guessResult {
+      margin-top: 30px;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    }
+
+    #zanki {
+      margin-top: 20px;
+      font-size: 1.4em;
+      color: #ffff00;
+      text-shadow: 0 0 8px #ffff00;
     }
   </style>
 </head>
 <body>
 
 <main class="container">
-  <h1>数当てゲーム (1~100)</h1>
+  <h1>NUM GUESSER <br> STORES GIRLS TECH CAMP</h1>
   
   <div id="guessGame">
-    <label for="guessField">予想: </label>
-    <input type="number" min="1" max="100" id="guessField">
-    <input type="submit" value="予想を入力" id="guessSubmit">
-    <input type="button" value="リセット" id="guessReset" style="background-color: red; color: white;">
+    <label for="guessField">キミの予想は？ (1～100)</label>
+    <input type="number" min="1" max="100" id="guessField" placeholder="数字を入力...">
+    <div>
+      <input type="submit" value="予想を送信" id="guessSubmit">
+      <input type="button" value="ゲームオーバー" id="guessReset">
+    </div>
     <p id="guessResult"></p>
     <div id="zanki"></div>
   </div>
@@ -61,6 +175,12 @@
     // ユーザの入力した値を取得
     let userGuess = Number(guessField.value);
 
+    // 入力値のバリデーション
+    if (userGuess < 1 || userGuess > 100 || isNaN(userGuess)) {
+      guessResult.textContent = '1から100の数字を入力してください！';
+      return;
+    }
+
     // 一時停止中かどうかで処理を分岐
     if (audio.paused) {
     // 一時停止中の場合は再生
@@ -69,34 +189,52 @@
 
     zanki--; // 残り回数を1減らす
     zankiField.textContent = '残り回数: ' + zanki; // 残り回数を更新
-
-    if (zanki === 0) { // 残り回数が0になった場合
-      guessResult.textContent = '残念！正解は ' + answerNumber + ' でした。';
-      guessSubmit.disabled = true; // 回答のボタンを無効化
-      return; // 関数を終了
-    }
+    
+    // 入力フィールドをクリア
+    guessField.value = '';
 
     if (userGuess === answerNumber) { // ユーザの入力が正解
-      guessResult.textContent = '正解です！';
+      guessResult.textContent = '🎉 正解です！サイバーワールドを救った！ 🎉';
+      guessSubmit.disabled = true; // 回答のボタンを無効化
+      audio.pause(); // audioを止める
+      audio.currentTime = 0; // 時間を0に
+    } else if (zanki === 0) { // 残り回数が0になった場合
+      guessResult.textContent = '🚨 残念！正解は ' + answerNumber + ' でした。ゲームオーバー！ 🚨';
+      guessSubmit.disabled = true; // 回答のボタンを無効化
+      audio.pause(); // audioを止める
+      audio.currentTime = 0; // 時間を0に
     } else if (userGuess < answerNumber) { // ユーザの入力が正解より小さい
-      guessResult.textContent = 'もっと大きいです';
+      guessResult.textContent = '👆 もっと上だ、ハッカー！';
     } else if (userGuess > answerNumber) { // ユーザの入力が正解より大きい
-      guessResult.textContent = 'もっと小さいです';
+      guessResult.textContent = '👇 もっと下だ、ハッカー！';
     }
   }
 
   // submitがクリックされたときに、checkGuess関数を呼び出す
   guessSubmit.addEventListener('click', checkGuess);
 
+  // guessFieldでEnterキーが押されたときにもcheckGuessを呼び出す
+  guessField.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      checkGuess();
+    }
+  });
+
   // resetがクリックされたときに、ゲームをリセットする
   guessReset.addEventListener('click', function() {
-    window.prompt('ほ、本当に諦めるの？');
+    // プロンプトをよりゲームの世界観に合わせる
+    const confirmReset = window.confirm('本当にこのシミュレーションを終了する？全てのデータが消滅するぞ！');
+    if (!confirmReset) {
+      return; // キャンセルされたら何もしない
+    }
 
     zanki = 10; // 残り回数をリセット
     zankiField.textContent = '残り回数: ' + zanki; // 残り回数を更新
     guessField.value = ''; // 入力フィールドをクリア
     guessResult.textContent = ''; // 結果表示をクリア
+    guessSubmit.disabled = false; // 無効化されたボタンを有効に戻す
     answerNumber = Math.floor(Math.random() * 100) + 1; // 新しい正解を生成
+    console.log('正解は' + answerNumber); // 新しい正解をログに出力
     audio.pause(); //audioを止める
     audio.currentTime = 0; //時間を０に
   });
