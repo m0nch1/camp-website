@@ -33,6 +33,32 @@
 
   // ポケモンは現在898種
   let pokemonNumber = Math.floor(Math.random() * 898) + 1;
+
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`)
+    .then(function (response) {
+      // レスポンスをコンソールに出力
+      console.log(response);
+
+      // JSONデータを取得して次の .then() に渡す
+      return response.json();
+    })
+    .then(function(data) {
+      // JSONデータをコンソールに出力
+      console.log(data);
+
+      // 日本語の名前を取得して表示
+      let names = data.names;
+      for (let i = 0; i < names.length; i++) {
+        if (names[i].language.name === 'ja') {
+          pokemonName.textContent = names[i].name;
+          break;
+        }
+      }
+    })
+    .catch(function(error) {
+      // エラーが発生した場合はコンソールに出力
+      console.error(`エラーが発生しました:${error}`);
+    });
  
   // PokéAPIからデータを取得し、名前と画像を表示
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`)
@@ -47,11 +73,8 @@
       // JSONデータをコンソールに出力
       console.log(data);
 
-      // ポケモンの名前を表示
-      pokemonName.textContent = data.name;
-
       // ポケモンの画像を表示
-      pokemonImage.src = data.sprites.back_default;
+      pokemonImage.src = data.sprites.front_default;
     })
     .catch(function(error) {
       // エラーが発生した場合はコンソールに出力
