@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>訪問カウンター</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+
+<main class="container">
+  <h1>ようこそ！</h1>
+  <p id="visitMessage"></p>
+</main>
+
+<script>
+  // localStorageから訪問回数を取得し、数値に変換（初回訪問時は0）
+  let visits = parseInt(localStorage.getItem('visits')) || 0;
+
+  // 訪問回数を1増やして保存
+  visits += 1;
+  localStorage.setItem('visits', visits);
+
+  // メッセージを表示
+  const visitMessage = document.getElementById('visitMessage');
+  if (visits === 1) {
+    visitMessage.textContent = '初めての訪問ありがとうございます！';
+  } else {
+    visitMessage.textContent = `これはあなたの${visits}回目の訪問です！`;
+  }
+</script>
+</body>
+</html>
